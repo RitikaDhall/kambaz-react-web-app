@@ -10,7 +10,8 @@ export default function Modules() {
             </div>
             <ul id="wd-modules">
                 <li className="wd-module">
-                    <div className="wd-title">Week 1</div>
+                    <div className="wd-title">Lecture 1 - Building React User Interfaces with HTML, Assignment 1, Setting Up the Development Environment, Introduction to HTML
+                    </div>
                     <ul className="wd-lessons">
                         <li className="wd-lesson">
                             <span className="wd-title">LEARNING OBJECTIVES</span>
@@ -38,7 +39,7 @@ export default function Modules() {
                     </ul>
                 </li>
                 <li className="wd-module">
-                    <div className="wd-title">Week 2</div>
+                    <div className="wd-title"> Lecture 2 - Prototyping the React Kambaz User Interface with HTML</div>
                     <ul className="wd-lessons">
                         <li className="wd-lesson">
                             <span className="wd-title">LEARNING OBJECTIVES</span>
@@ -66,7 +67,7 @@ export default function Modules() {
                     </ul>
                 </li>
                 <li className="wd-module">
-                    <div className="wd-title">Week 3</div>
+                    <div className="wd-title"> Lecture 3 - Styling Web Pages with CSS and Bootstrap, Assignment 2</div>
                     <ul className="wd-lessons">
                         <li className="wd-lesson">
                             <span className="wd-title">LEARNING OBJECTIVES</span>
