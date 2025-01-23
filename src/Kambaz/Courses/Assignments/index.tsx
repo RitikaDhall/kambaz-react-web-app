@@ -11,7 +11,7 @@ export default function Assignments() {
                         A1 - ENV + HTML
                     </a>
                     <br />
-                    <b>Due</b> Jan 22 at 11:59pm Jan 22 at 11:59pm | -/100 pts
+                    <b>Due</b> Jan 22 at 11:59pm | -/100 pts
                 </li>
                 <li className="wd-assignment-list-item">
                     <a href="#/Kambaz/Courses/1234/Assignments/2" className="wd-assignment-link" >

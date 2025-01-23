@@ -138,17 +138,17 @@ export default function AssignmentEditor() {
                         </tr>
                         <tr>
                             <td>
-                                <input type="date" id="wd-available-from" value="2025-01-22" />
+                                <input type="date" id="wd-available-from" value="2025-01-02" />
                             </td>
                             <td>
-                                <input type="date" id="wd-available-from" value="2025-01-22" />
+                                <input type="date" id="wd-available-until" value="2025-01-22" />
                             </td>
                         </tr>
                     </td>
                 </tr>
             </table>
             <hr />
-            <div style={{ textAlign: 'right' }}>
+            <div align="right">
                 <button id="wd-cancel-assignment">Cancel</button>&nbsp;
                 <button id="wd-save-assignment">Save</button>
             </div>

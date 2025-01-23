@@ -7,6 +7,12 @@ import Lab3 from "./Lab3";
 export default function Labs() {
   return (
     <div id="wd-labs">
+      <h1>My Info</h1>
+      <p>
+        Name: Ritika Pankaj Dhall<br />
+        Section: 01<br />
+        Source code GitHub repository: <a href="https://github.com/RitikaDhall/kambaz-react-web-app">My GitHub Repository</a> (Link is also available at the end of Lab 1)
+      </p>
       <h1>Labs</h1>
       <TOC />
       <Routes>
