@@ -11,7 +11,7 @@ export default function Labs() {
       <p>
         Name: Ritika Pankaj Dhall<br />
         Section: 01<br />
-        Source code GitHub repository: <a href="https://github.com/RitikaDhall/kambaz-react-web-app">My GitHub Repository</a> (Link is also available at the end of Lab 1)
+        Source code GitHub repository: <a href="https://github.com/RitikaDhall/kambaz-react-web-app">My GitHub Repository</a>
       </p>
       <h1>Labs</h1>
       <TOC />
