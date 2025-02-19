@@ -1,116 +1,120 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
+import { Link, useParams } from "react-router";
+import { assignments } from "../../Database";
 
 export default function AssignmentEditor() {
+    const { cid } = useParams();
+    const { aid } = useParams();
+
     return (
         <Form id="wd-assignments-editor">
-            <Form.Group className="mb-2">
-                <Form.Label htmlFor="wd-name" >Assignment Name</Form.Label>
-                <Form.Control id="wd-name" value="A1 - ENV + HTML" />
-            </Form.Group>
 
-            <Form.Group className="mb-2">
-                <Form.Control as="textarea" id="wd-description" rows={5}>
-                    Complete all the Lab exercises and Kambaz exercises described in Chapter 1 of
-                    Developing Full Stack MERN Web Applications.
-                    Submit a link to the landing page of your Web application running on Netlify.
-                    The landing page should be the Kambaz application with a link to the Lab exercises.
-                    Lab 1 should be the landing page of the Lab exercises and should include the following:
-                    - Your full name and section
-                    - Links to each of the lab assignments
-                    - Link to the Kambaz application
-                    - Links to all relevant source code repositories
-                    The Kambaz application should include a link to navigate back to the landing page.
-                </Form.Control>
-            </Form.Group>
+            {assignments
+                .filter((assignment: any) => assignment._id === aid)
+                .map((assignment: any) => (
+                    <div>
+                        <Form.Group className="mb-2">
+                            <Form.Label htmlFor="wd-name" >Assignment Name</Form.Label>
+                            <Form.Control id="wd-name" value={assignment.title} />
+                        </Form.Group>
 
-            <Form.Group as={Row} className="mb-2">
-                <Form.Label column sm="4" htmlFor="wd-points" className="text-sm-end">
-                    Points
-                </Form.Label>
-                <Col sm="8">
-                    <Form.Control id="wd-points" value={100} />
-                </Col>
-            </Form.Group>
+                        <Form.Group className="mb-2">
+                            <Form.Control as="textarea" id="wd-description" rows={5}>
+                                {assignment.description}
+                            </Form.Control>
+                        </Form.Group>
 
-            <Form.Group as={Row} className="mb-2">
-                <Form.Label column sm="4" htmlFor="wd-group" className="text-sm-end">
-                    Assignment Group
-                </Form.Label>
-                <Col sm="8">
-                    <Form.Select id="wd-group" name="wd-group">
-                        <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-                        <option value="QUIZZES">QUIZZES</option>
-                        <option value="EXAMS">EXAMS</option>
-                        <option value="PROJECT">PROJECT</option>
-                    </Form.Select>
-                </Col>
-            </Form.Group>
+                        <Form.Group as={Row} className="mb-2">
+                            <Form.Label column sm="4" htmlFor="wd-points" className="text-sm-end">
+                                Points
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Control id="wd-points" value={assignment.points} />
+                            </Col>
+                        </Form.Group>
 
-            <Form.Group as={Row} className="mb-2">
-                <Form.Label column sm="4" htmlFor="wd-display-grade-as" className="text-sm-end">
-                    Display Grade as
-                </Form.Label>
-                <Col sm="8">
-                    <Form.Select id="wd-display-grade-as" name="wd-display-grade-as">
-                        <option value="Percentage">Percentage</option>
-                        <option value="Letter">Letter</option>
-                    </Form.Select>
-                </Col>
-            </Form.Group>
+                        <Form.Group as={Row} className="mb-2">
+                            <Form.Label column sm="4" htmlFor="wd-group" className="text-sm-end">
+                                Assignment Group
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Select id="wd-group" name="wd-group" defaultValue={assignment.group}>
+                                    <option value="assignments">ASSIGNMENTS</option>
+                                    <option value="quizzes">QUIZZES</option>
+                                    <option value="exams">EXAMS</option>
+                                    <option value="project">PROJECT</option>
+                                </Form.Select>
+                            </Col>
+                        </Form.Group>
 
-            <Form.Group as={Row} className="mb-2">
-                <Form.Label column sm="4" htmlFor="wd-submission-type" className="text-sm-end">
-                    Submission Type
-                </Form.Label>
-                <Col sm="8">
-                    <Form.Select id="wd-submission-type" name="wd-submission-type">
-                        <option value="Online">Online</option>
-                        <option value="Pen and paper">Pen and paper</option>
-                    </Form.Select>
-                    <Form.Label column sm="8">
-                        Online Entry Options
-                    </Form.Label>
-                    <Col sm="8">
-                        <Form.Check id="wd-text-entry" name="wd-online-entry-options" label="Text Entry" value="TEXT ENTRY" />
-                        <Form.Check id="wd-website-url" name="wd-online-entry-options" label="Website URL" value="WEBSITE URL" />
-                        <Form.Check id="wd-media-recordings" name="wd-online-entry-options" label="Media Recordings" value="MEDIA RECORDINGS" />
-                        <Form.Check id="wd-student-annotation" name="wd-online-entry-options" label="Student Annotation" value="STUDENT ANNOTATION" />
-                        <Form.Check id="wd-file-upload" name="wd-online-entry-options" label="File Upload" value="FILE UPLOAD" />
-                    </Col>
-                </Col>
-            </Form.Group>
+                        <Form.Group as={Row} className="mb-2">
+                            <Form.Label column sm="4" htmlFor="wd-display-grade-as" className="text-sm-end">
+                                Display Grade as
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Select id="wd-display-grade-as" name="wd-display-grade-as" defaultValue={assignment.displayGradeAs}>
+                                    <option value="percentage">Percentage</option>
+                                    <option value="letter">Letter</option>
+                                </Form.Select>
+                            </Col>
+                        </Form.Group>
 
-            <Form.Group as={Row} className="mb-2">
-                <Form.Label column sm="4" className="text-sm-end">
-                    Assign
-                </Form.Label>
-                <Col sm="8">
-                    <Form.Label htmlFor="wd-assign-to" >Assign to</Form.Label>
-                    <Form.Control id="wd-assign-to" value="Everyone" />
+                        <Form.Group as={Row} className="mb-2">
+                            <Form.Label column sm="4" htmlFor="wd-submission-type" className="text-sm-end">
+                                Submission Type
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Select id="wd-submission-type" name="wd-submission-type" defaultValue={assignment.submissionType}>
+                                    <option value="online">Online</option>
+                                    <option value="pen and paper">Pen and paper</option>
+                                </Form.Select>
+                                <Form.Label column sm="8">
+                                    Online Entry Options
+                                </Form.Label>
+                                <Col sm="8">
+                                    <Form.Check id="wd-text-entry" name="wd-online-entry-options" label="Text Entry" value="TEXT ENTRY" />
+                                    <Form.Check id="wd-website-url" name="wd-online-entry-options" label="Website URL" value="WEBSITE URL" />
+                                    <Form.Check id="wd-media-recordings" name="wd-online-entry-options" label="Media Recordings" value="MEDIA RECORDINGS" />
+                                    <Form.Check id="wd-student-annotation" name="wd-online-entry-options" label="Student Annotation" value="STUDENT ANNOTATION" />
+                                    <Form.Check id="wd-file-upload" name="wd-online-entry-options" label="File Upload" value="FILE UPLOAD" />
+                                </Col>
+                            </Col>
+                        </Form.Group>
 
-                    <Form.Label htmlFor="wd-due-date" >Due</Form.Label>
-                    <Form.Control type="date" id="wd-assign-to" value="2025-01-22" />
+                        <Form.Group as={Row} className="mb-2">
+                            <Form.Label column sm="4" className="text-sm-end">
+                                Assign
+                            </Form.Label>
+                            <Col sm="8">
+                                <Form.Label htmlFor="wd-assign-to" >Assign to</Form.Label>
+                                <Form.Control id="wd-assign-to" value={assignment.assignedTo} />
 
-                    <Row className="mb-2">
-                        <Col>
-                            <Form.Label htmlFor="wd-available-from" >Available from</Form.Label>
-                            <Form.Control type="date" id="wd-available-from" value="2025-01-02" />
-                        </Col>
-                        <Col>
-                            <Form.Label htmlFor="wd-available-until" >Until</Form.Label>
-                            <Form.Control type="date" id="wd-available-until" value="2025-01-22" />
-                        </Col>
+                                <Form.Label htmlFor="wd-due-date" >Due</Form.Label>
+                                <Form.Control type="date" id="wd-assign-to" value={assignment.dueDate} />
 
-                    </Row>
-                </Col>
-            </Form.Group>
+                                <Row className="mb-2">
+                                    <Col>
+                                        <Form.Label htmlFor="wd-available-from" >Available from</Form.Label>
+                                        <Form.Control type="date" id="wd-available-from" value={assignment.availableFromDate} />
+                                    </Col>
+                                    <Col>
+                                        <Form.Label htmlFor="wd-available-until" >Until</Form.Label>
+                                        <Form.Control type="date" id="wd-available-until" value={assignment.availableUntilDate} />
+                                    </Col>
 
-            <hr />
+                                </Row>
+                            </Col>
+                        </Form.Group>
 
-            <div className="float-end mb-2 me-1">
-                <Button variant="secondary" className="me-2">Cancel</Button>
-                <Button variant="danger" className="me-2">Save</Button>
-            </div>
+                        <hr />
+
+                        <div className="float-end mb-2 me-1">
+                            <Link to={`/Kambaz/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
+                            <Link to={`/Kambaz/Courses/${cid}/Assignments`} className="btn btn-danger me-2">Save</Link>
+                        </div>
+                    </div>
+                ))
+            }
         </Form>
     );
 }
