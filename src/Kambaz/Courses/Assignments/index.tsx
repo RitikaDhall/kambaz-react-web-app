@@ -59,6 +59,11 @@ export default function Assignments() {
                                                 </a>
                                                 <br />
                                                 <span style={{ color: 'red' }}>Multiple Modules</span> |
+                                                {
+                                                    assignment.availableFromDate > new Date().toISOString() ?
+                                                        <span> <b>Not available until</b> {formatDate(assignment.dueDate)} at 12:00am |</span> :
+                                                        ""
+                                                }
                                                 <br />
                                                 <b>Due</b> {formatDate(assignment.dueDate)} at 11:59pm | -/{assignment.points} pts
                                             </Col>
