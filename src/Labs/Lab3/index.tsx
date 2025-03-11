@@ -1,3 +1,4 @@
+import { Provider } from "react-redux";
 import Add from "./Add";
 import AddingAndRemovingToFromArrays from "./AddingAndRemovingToFromArrays";
 import ArrayIndexAndLength from "./ArrayIndexAndLength";
@@ -31,12 +32,21 @@ import TodoItem from "./todos/TodoItem";
 import TodoList from "./todos/TodoList";
 import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariableTypes";
+import store from "../store";
+import TodoRedux from "./TodoRedux";
 
 export default function Lab3() {
     console.log('Hello World!');
+    
     return (
         <div id="wd-lab3">
             <h2>Lab 3</h2>
+
+            <Provider store={store}>
+                <TodoRedux />
+            </Provider>
+            <hr />
+
             <h3>JavaScript</h3>
             <VariablesAndConstants />
             <VariableTypes />
