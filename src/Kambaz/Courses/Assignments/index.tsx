@@ -4,14 +4,20 @@ import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
 import { Button, Col, ListGroup, Row } from "react-bootstrap";
 import GreenEdit from "./GreenEdit";
+import { FaTrash } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import { assignments } from "../../Database";
 import { useState } from "react";
+import FacultyRoute from "../../Account/FacultyRoute";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
     const { cid } = useParams();
+    const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(true);
+
+    const { assignments } = useSelector((state: any) => state.assignmentReducer);
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
@@ -24,7 +30,9 @@ export default function Assignments() {
     return (
         <div id="wd-assignments">
 
-            <AssignmentControls /><br /><br /><br /><br />
+            <AssignmentControls />
+            
+            <br /><br /><br /><br />
 
             <ListGroup id="wd-assignment-list" className="rounded-0">
                 <ListGroup.Item className="wd-module p-0 mb-5 fs-5 border-gray">
@@ -38,7 +46,9 @@ export default function Assignments() {
                             {isExpanded ? <IoMdArrowDropdown /> : <IoMdArrowDropright />}
                         </Button>
                         ASSIGNMENTS
-                        <AssignmentControlButtons />
+                        <FacultyRoute>
+                            <AssignmentControlButtons />
+                        </FacultyRoute>
                     </div>
                     {isExpanded &&
                         assignments
@@ -50,9 +60,11 @@ export default function Assignments() {
                                             <Col xs="auto">
                                                 <BsGripVertical className="me-2 fs-3" />
                                             </Col>
+
                                             <Col xs="auto">
                                                 <GreenEdit />
                                             </Col>
+
                                             <Col>
                                                 <a href={`#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`} className="wd-assignment-link" >
                                                     {assignment.title}
@@ -67,9 +79,13 @@ export default function Assignments() {
                                                 <br />
                                                 <b>Due</b> {formatDate(assignment.dueDate)} at 11:59pm | -/{assignment.points} pts
                                             </Col>
-                                            <Col xs="auto">
-                                                <LessonControlButtons />
-                                            </Col>
+                                            <FacultyRoute>
+                                                <Col xs="auto">
+                                                    <FaTrash onClick={() => dispatch(deleteAssignment(assignment._id))} className="text-danger me-3 mb-1" />
+                                                    <LessonControlButtons />
+                                                </Col>
+                                            </FacultyRoute>
+
                                         </Row>
                                     </ListGroup.Item>
                                 </ListGroup>
