@@ -3,7 +3,6 @@ import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
 import { Button, Col, ListGroup, Modal, Row } from "react-bootstrap";
-import GreenEdit from "./GreenEdit";
 import { FaTrash } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
 import AssignmentControlButtons from "./AssignmentControlButtons";
@@ -11,10 +10,11 @@ import { useState } from "react";
 import FacultyRoute from "../../Account/FacultyRoute";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAssignment } from "./reducer";
+import { FiEdit } from "react-icons/fi";
 
 export default function Assignments() {
     const { cid } = useParams();
-    const {currentUser} = useSelector((state: any) => state.accountReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -61,17 +61,16 @@ export default function Assignments() {
                             .map((assignment: any) => (
                                 <ListGroup className="wd-lessons rounded-0" key={assignment._id}>
                                     <ListGroup.Item className="wd-lesson p-3 ps-1">
+
                                         <Row>
-                                            <Col xs="auto">
+                                            <Col xs='auto'>
                                                 <BsGripVertical className="me-2 fs-3" />
+                                                <FiEdit className="text-success fs-4" />
                                             </Col>
 
-                                            <Col xs="auto">
-                                                <GreenEdit />
-                                            </Col>
 
                                             <Col>
-                                                <a href={currentUser.role === 'FACULTY'? (`#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`) : (`#/Kambaz/Courses/${assignment.course}/Assignments`) } className="wd-assignment-link" >
+                                                <a href={currentUser.role === 'FACULTY' ? (`#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`) : (`#/Kambaz/Courses/${assignment.course}/Assignments`)} className="wd-assignment-link" >
                                                     {assignment.title}
                                                 </a>
                                                 <br />
@@ -84,13 +83,13 @@ export default function Assignments() {
                                                 <br />
                                                 <b>Due</b> {formatDate(assignment.dueDate)} at 11:59pm | -/{assignment.points} pts
                                             </Col>
+
                                             <FacultyRoute>
-                                                <Col xs="auto">
+                                                <Col xs='auto'>
                                                     <FaTrash onClick={() => handleShow()} className="text-danger me-3 mb-1" />
                                                     <LessonControlButtons />
                                                 </Col>
                                             </FacultyRoute>
-
                                         </Row>
 
                                         <Modal show={show} onHide={handleClose}>

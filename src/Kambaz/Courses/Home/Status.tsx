@@ -5,24 +5,30 @@ import { LiaFileImportSolid } from "react-icons/lia";
 import { Button } from "react-bootstrap";
 import { ImStatsBars } from "react-icons/im";
 import { TbSpeakerphone } from "react-icons/tb";
+import FacultyRoute from "../../Account/FacultyRoute";
 
 export default function CourseStatus() {
     return (
         <div id="wd-course-status" style={{ width: "350px" }}>
             <h2>Course Status</h2>
-            <div className="d-flex">
-                <div className="w-50 pe-1">
-                    <Button variant="secondary" size="lg" className="w-100 text-nowrap">
-                        <MdDoNotDisturbAlt className="me-2 fs-5" /> Unpublish
-                    </Button>
+
+            <FacultyRoute>
+                <div className="d-flex">
+                    <div className="w-50 pe-1">
+                        <Button variant="secondary" size="lg" className="w-100 text-nowrap">
+                            <MdDoNotDisturbAlt className="me-2 fs-5" /> Unpublish
+                        </Button>
+                    </div>
+                    <div className="w-50">
+                        <Button variant="success" size="lg" className="w-100">
+                            <FaCheckCircle className="me-2 fs-5" /> Publish
+                        </Button>
+                    </div>
                 </div>
-                <div className="w-50">
-                    <Button variant="success" size="lg" className="w-100">
-                        <FaCheckCircle className="me-2 fs-5" /> Publish
-                    </Button>
-                </div>
-            </div>
+            </FacultyRoute>
+
             <br />
+            
             <Button variant="secondary" size="lg" className="w-100 mt-1 text-start">
                 <BiImport className="me-2 fs-5" /> Import Existing Content
             </Button>
