@@ -7,11 +7,13 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import FacultyRoute from "../Account/FacultyRoute";
+import { useSelector } from "react-redux";
 
-export default function Courses({ courses }: { courses: any[]; }) {
-    const { cid } = useParams();
-    const course = courses.find((course) => course._id === cid);
+export default function Courses(/*{ courses }: { courses: any[]; }*/) {
     const pathname = useLocation().pathname;
+    const { cid } = useParams();
+    const { courses } = useSelector((state: any) => state.coursesReducer)
+    const course = courses.find((course: any) => course._id === cid);
 
     return (
         <div id="wd-courses">

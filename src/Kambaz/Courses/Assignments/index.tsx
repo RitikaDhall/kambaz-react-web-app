@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { BsGripVertical } from "react-icons/bs";
 import LessonControlButtons from "../Modules/LessonControlButtons";
 import AssignmentControls from "./AssignmentControls";
-import { Button, Col, ListGroup, Row } from "react-bootstrap";
+import { Button, Col, ListGroup, Modal, Row } from "react-bootstrap";
 import GreenEdit from "./GreenEdit";
 import { FaTrash } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
@@ -14,6 +14,7 @@ import { deleteAssignment } from "./reducer";
 
 export default function Assignments() {
     const { cid } = useParams();
+    const {currentUser} = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
     const [isExpanded, setIsExpanded] = useState(true);
 
@@ -27,11 +28,15 @@ export default function Assignments() {
         });
     }
 
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
     return (
         <div id="wd-assignments">
 
             <AssignmentControls />
-            
+
             <br /><br /><br /><br />
 
             <ListGroup id="wd-assignment-list" className="rounded-0">
@@ -66,7 +71,7 @@ export default function Assignments() {
                                             </Col>
 
                                             <Col>
-                                                <a href={`#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`} className="wd-assignment-link" >
+                                                <a href={currentUser.role === 'FACULTY'? (`#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`) : (`#/Kambaz/Courses/${assignment.course}/Assignments`) } className="wd-assignment-link" >
                                                     {assignment.title}
                                                 </a>
                                                 <br />
@@ -81,18 +86,38 @@ export default function Assignments() {
                                             </Col>
                                             <FacultyRoute>
                                                 <Col xs="auto">
-                                                    <FaTrash onClick={() => dispatch(deleteAssignment(assignment._id))} className="text-danger me-3 mb-1" />
+                                                    <FaTrash onClick={() => handleShow()} className="text-danger me-3 mb-1" />
                                                     <LessonControlButtons />
                                                 </Col>
                                             </FacultyRoute>
 
                                         </Row>
+
+                                        <Modal show={show} onHide={handleClose}>
+                                            <Modal.Header closeButton>
+                                                <Modal.Title>Delete Assignment</Modal.Title>
+                                            </Modal.Header>
+                                            <Modal.Body>
+                                                Are you sure you want to remove this assignment?
+                                            </Modal.Body>
+                                            <Modal.Footer>
+                                                <Button variant="secondary" onClick={handleClose}> Cancel </Button>
+                                                <Button variant="danger"
+                                                    onClick={() => {
+                                                        dispatch(deleteAssignment(assignment._id));
+                                                        handleClose();
+                                                    }} > Delete Assignment </Button>
+                                            </Modal.Footer>
+                                        </Modal>
+
                                     </ListGroup.Item>
                                 </ListGroup>
                             ))
                     }
                 </ListGroup.Item>
             </ListGroup>
+
+
 
         </div>
     );
