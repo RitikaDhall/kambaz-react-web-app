@@ -17,7 +17,7 @@ function App() {
             <Route path="/Kambaz/*" element={<Kambaz />} />
           </Routes>
         </div>
-      </Provider>s
+      </Provider>
     </HashRouter>
   )
 }
