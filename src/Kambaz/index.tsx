@@ -6,26 +6,30 @@ import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import EnrollmentRoute from "./Account/EnrollmentRoute";
+import Session from "./Account/Session";
 
 export default function Kambaz() {
-
+    
     return (
-        <div id="wd-kambaz">
-            <KambazNavigation />
-            <div className="wd-main-content-offset p-3">
-                <Routes>
-                    <Route path="/" element={<Navigate to="Account" />} />
-                    <Route path="/Account/*" element={<Account />} />
-                    <Route path="/Dashboard" element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    } />
-                    <Route path="/Courses/:cid/*" element={<ProtectedRoute><EnrollmentRoute><Courses /></EnrollmentRoute></ProtectedRoute>} />
-                    <Route path="/Calendar" element={<h1>Calendar</h1>} />
-                    <Route path="/Inbox" element={<h1>Inbox</h1>} />
-                </Routes>
+        <Session>
+            <div id="wd-kambaz">
+                <KambazNavigation />
+                <div className="wd-main-content-offset p-3">
+                    <Routes>
+                        <Route path="/" element={<Navigate to="Account" />} />
+                        <Route path="/Account/*" element={<Account />} />
+                        <Route path="/Dashboard" element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        } />
+                        <Route path="/Courses/:cid/*" element={<ProtectedRoute><EnrollmentRoute><Courses /></EnrollmentRoute></ProtectedRoute>} />
+                        <Route path="/Calendar" element={<h1>Calendar</h1>} />
+                        <Route path="/Inbox" element={<h1>Inbox</h1>} />
+                    </Routes>
+                </div>
             </div>
-        </div>
+        </Session>
+
     );
 }

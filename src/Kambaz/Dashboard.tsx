@@ -2,17 +2,14 @@ import { Row, Col, Card, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FacultyRoute from "./Account/FacultyRoute";
-import { addCourse, deleteCourse, updateCourse, enrollCourse, unenrollCourse } from "./Courses/reducer";
+
 import { useState } from "react";
+import { addNewCourse, deleteCourse, updateCourse, enrollCourse, unenrollCourse } from "./Courses/reducer";
 
 export default function Dashboard() {
     const dispatch = useDispatch();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { courses } = useSelector((state: any) => state.coursesReducer);
-    const { enrollments } = useSelector((state: any) => state.coursesReducer);
-
-    const [showEnrolled, setShowEnrolled] = useState(true);
-
     const [course, setCourse] = useState<any>({
         _id: "0",
         name: "New Course",
@@ -22,6 +19,8 @@ export default function Dashboard() {
         image: "/images/reactjs.jpg",
         description: "New Description"
     });
+    const { enrollments } = useSelector((state: any) => state.coursesReducer);
+    const [showEnrolled, setShowEnrolled] = useState(true);
 
     const enrolledCourses = courses.filter((course: any) =>
         enrollments.some(
@@ -45,7 +44,7 @@ export default function Dashboard() {
                     New Course
                     <button className="btn btn-primary float-end"
                         id="wd-add-new-course-click"
-                        onClick={() => dispatch(addCourse(course))} >
+                        onClick={() => dispatch(addNewCourse(course))} >
                         Add
                     </button>
                     <button className="btn btn-warning float-end me-2"
@@ -79,9 +78,9 @@ export default function Dashboard() {
                                         <Card.Body className="card-body">
                                             <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">{course.name}</Card.Title>
                                             <Card.Text className="wd-dashboard-course-description overflow-hidden" style={{ height: "100px" }}>{course.description}</Card.Text>
-                                                {/* hidden={isEnrolled(course._id)? (false) : (true)} */}
-                                            <Button variant="primary" className="float-start mb-3" hidden={isEnrolled(course._id)? (false) : (true)}>Go</Button>
-                                            
+                                            {/* hidden={isEnrolled(course._id)? (false) : (true)} */}
+                                            <Button variant="primary" className="float-start mb-3" hidden={isEnrolled(course._id) ? (false) : (true)}>Go</Button>
+
                                             {showEnrolled ? (
                                                 <FacultyRoute>
                                                     <Button onClick={(event) => {
@@ -116,14 +115,12 @@ export default function Dashboard() {
                                                     {isEnrolled(course._id) ? "Unenroll" : "Enroll"}
                                                 </Button>
                                             )}
-                                            
                                         </Card.Body>
                                     </Link>
                                 </Card>
                             </Col>
                         ))
                     }
-
                 </Row>
             </div>
         </div>
