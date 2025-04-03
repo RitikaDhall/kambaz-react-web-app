@@ -7,9 +7,40 @@ import Courses from "./Courses";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import EnrollmentRoute from "./Account/EnrollmentRoute";
 import Session from "./Account/Session";
+import { useDispatch, useSelector } from "react-redux";
+import { setCourses, setEnrollments } from "./Courses/reducer";
+import * as coursesClient from "./Courses/client";
+import * as enrollmentClient from "./Courses/enrollmentsClient";
+import { useEffect } from "react";
 
 export default function Kambaz() {
-    
+    const dispatch = useDispatch();
+    const { courses } = useSelector((state: any) => state.coursesReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+    const fetchCourses = async () => {
+        try {
+            const courses = await coursesClient.fetchAllCourses();
+            dispatch(setCourses(courses));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const fetchEnrollments = async () => {
+        try {
+            const enrollments = await enrollmentClient.getAllEnrollments();
+            dispatch(setEnrollments(enrollments));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCourses();
+        fetchEnrollments();
+    }, [currentUser]);
+
     return (
         <Session>
             <div id="wd-kambaz">
@@ -20,10 +51,10 @@ export default function Kambaz() {
                         <Route path="/Account/*" element={<Account />} />
                         <Route path="/Dashboard" element={
                             <ProtectedRoute>
-                                <Dashboard />
+                                <Dashboard courses={courses} />
                             </ProtectedRoute>
                         } />
-                        <Route path="/Courses/:cid/*" element={<ProtectedRoute><EnrollmentRoute><Courses /></EnrollmentRoute></ProtectedRoute>} />
+                        <Route path="/Courses/:cid/*" element={<ProtectedRoute><EnrollmentRoute><Courses/></EnrollmentRoute></ProtectedRoute>} />
                         <Route path="/Calendar" element={<h1>Calendar</h1>} />
                         <Route path="/Inbox" element={<h1>Inbox</h1>} />
                     </Routes>

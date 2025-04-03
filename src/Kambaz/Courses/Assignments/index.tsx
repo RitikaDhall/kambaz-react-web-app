@@ -6,11 +6,13 @@ import { Button, Col, ListGroup, Modal, Row } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import { IoMdArrowDropdown, IoMdArrowDropright } from "react-icons/io";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FacultyRoute from "../../Account/FacultyRoute";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
 import { FiEdit } from "react-icons/fi";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 export default function Assignments() {
     const { cid } = useParams();
@@ -31,6 +33,19 @@ export default function Assignments() {
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    const fetchAssignments = async () => {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+
+    const removeAssignment = async (assignmentId: string) => {
+        await assignmentsClient.deleteAssignment(assignmentId);
+        dispatch(deleteAssignment(assignmentId));
+    };
 
     return (
         <div id="wd-assignments">
@@ -103,7 +118,7 @@ export default function Assignments() {
                                                 <Button variant="secondary" onClick={handleClose}> Cancel </Button>
                                                 <Button variant="danger"
                                                     onClick={() => {
-                                                        dispatch(deleteAssignment(assignment._id));
+                                                        removeAssignment(assignment._id);
                                                         handleClose();
                                                     }} > Delete Assignment </Button>
                                             </Modal.Footer>

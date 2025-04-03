@@ -7,13 +7,39 @@ import AssignmentEditor from "./Assignments/Editor";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table";
 import FacultyRoute from "../Account/FacultyRoute";
-import { useSelector } from "react-redux";
+import * as courseClient from "./client";
+import { useEffect, useState } from "react";
 
-export default function Courses(/*{ courses }: { courses: any[]; }*/) {
+export default function Courses() {
     const pathname = useLocation().pathname;
     const { cid } = useParams();
-    const { courses } = useSelector((state: any) => state.coursesReducer)
-    const course = courses.find((course: any) => course._id === cid);
+    // const { courses } = useSelector((state: any) => state.coursesReducer)
+    const [course, setCourse] = useState({
+        _id: cid,
+        name: "",
+        number: "",
+        startDate: "",
+        endDate: "",
+        image: "",
+        description: ""
+    });
+
+    // useEffect fetch by ID
+    const fetchCourseByID = async () => {
+        try {
+            if (cid) {
+                const course = await courseClient.fetchCourseById(cid);
+                setCourse(course);
+            } else {
+                console.error("Course ID is undefined.");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        fetchCourseByID();
+    }, [cid]);
 
     return (
         <div id="wd-courses">

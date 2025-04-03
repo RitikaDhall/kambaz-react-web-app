@@ -3,6 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
     const location = useLocation();
@@ -31,12 +33,23 @@ export default function AssignmentEditor() {
         );
     }, []);
 
+    const createAssignmentForCourse = async (assignment: any) => {
+        if (!cid) return;
+        const assign = await coursesClient.createAssignmentForCourse(cid, assignment);
+        dispatch(addAssignment(assign));
+    };
+
+    const saveAssignment = async (assignment: any) => {
+        await assignmentsClient.updateAssignment(assignment);
+        dispatch(updateAssignment(assignment));
+    };
+
     const handleSave = (assignment: any) => {
         if (location.pathname.includes("New")) {
-            dispatch(addAssignment(assignment));
+            createAssignmentForCourse(assignment);
         }
         else {
-            dispatch(updateAssignment(assignment));
+            saveAssignment(assignment);
         }
         navigate(`/Kambaz/Courses/${cid}/Assignments`);
     }
@@ -44,10 +57,9 @@ export default function AssignmentEditor() {
     return (
         <Form id="wd-assignments-editor">
 
-
             <div>
                 <Form.Group className="mb-2">
-                    <Form.Label htmlFor="wd-name" >Assignment Name</Form.Label>
+                    <Form.Label htmlFor="wd-name">Assignment Name</Form.Label>
                     <Form.Control id="wd-name"
                         value={assignment?.title}
                         onChange={(e) => setAssignment((prevState: any) => ({ ...prevState, title: e.target.value }))}
