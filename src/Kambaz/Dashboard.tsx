@@ -12,6 +12,7 @@ export default function Dashboard({ courses }: { courses: any[] }) {
     const dispatch = useDispatch();
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { enrollments } = useSelector((state: any) => state.coursesReducer);
 
     const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
     const [course, setCourse] = useState<any>({
@@ -59,17 +60,18 @@ export default function Dashboard({ courses }: { courses: any[] }) {
         );
     };
 
-    const fetchCourses = async () => {
+    const fetchMyCourses = async () => {
         try {
             const enrolledCourses = await userClient.findMyCourses();
+            console.log("Enrolled courses:", enrolledCourses);
             setEnrolledCourses(enrolledCourses);
         } catch (error) {
             console.error(error);
         }
     };
     useEffect(() => {
-        fetchCourses();
-    }, [currentUser, enrolledCourses]);
+        fetchMyCourses();
+    }, [currentUser, courses, enrollments]);
 
     return (
         <div id="wd-dashboard" className="p-4">

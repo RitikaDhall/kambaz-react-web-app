@@ -10,12 +10,13 @@ import Session from "./Account/Session";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourses, setEnrollments } from "./Courses/reducer";
 import * as coursesClient from "./Courses/client";
-import * as enrollmentClient from "./Courses/enrollmentsClient";
+import * as enrollmentsClient from "./Courses/enrollmentsClient";
 import { useEffect } from "react";
 
 export default function Kambaz() {
     const dispatch = useDispatch();
     const { courses } = useSelector((state: any) => state.coursesReducer);
+    const { enrollments } = useSelector((state: any) => state.coursesReducer);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     const fetchCourses = async () => {
@@ -26,18 +27,19 @@ export default function Kambaz() {
             console.error(error);
         }
     };
+    useEffect(() => {
+        fetchCourses();
+    }, [currentUser, enrollments]);
 
     const fetchEnrollments = async () => {
         try {
-            const enrollments = await enrollmentClient.getAllEnrollments();
+            const enrollments = await enrollmentsClient.getAllEnrollments();
             dispatch(setEnrollments(enrollments));
         } catch (error) {
             console.error(error);
         }
     };
-
     useEffect(() => {
-        fetchCourses();
         fetchEnrollments();
     }, [currentUser, courses]);
 
@@ -54,7 +56,7 @@ export default function Kambaz() {
                                 <Dashboard courses={courses} />
                             </ProtectedRoute>
                         } />
-                        <Route path="/Courses/:cid/*" element={<ProtectedRoute><EnrollmentRoute><Courses/></EnrollmentRoute></ProtectedRoute>} />
+                        <Route path="/Courses/:cid/*" element={<ProtectedRoute><EnrollmentRoute><Courses /></EnrollmentRoute></ProtectedRoute>} />
                         <Route path="/Calendar" element={<h1>Calendar</h1>} />
                         <Route path="/Inbox" element={<h1>Inbox</h1>} />
                     </Routes>
