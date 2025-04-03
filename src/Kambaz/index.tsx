@@ -39,7 +39,7 @@ export default function Kambaz() {
     useEffect(() => {
         fetchCourses();
         fetchEnrollments();
-    }, [currentUser]);
+    }, []);
 
     return (
         <Session>
