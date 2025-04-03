@@ -16,7 +16,7 @@ import { useEffect } from "react";
 export default function Kambaz() {
     const dispatch = useDispatch();
     const { courses } = useSelector((state: any) => state.coursesReducer);
-    // const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     const fetchCourses = async () => {
         try {
@@ -39,7 +39,7 @@ export default function Kambaz() {
     useEffect(() => {
         fetchCourses();
         fetchEnrollments();
-    }, []);
+    }, [currentUser, courses]);
 
     return (
         <Session>
