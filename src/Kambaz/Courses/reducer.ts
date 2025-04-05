@@ -44,7 +44,6 @@ const coursesSlice = createSlice({
         user: userId,
         course: courseId,
       };
-      console.log(newEnrollment);
       state.enrollments = [...state.enrollments, newEnrollment] as any;
     },
     unenrollCourse: (state, { payload: { userId, courseId } }) => {
