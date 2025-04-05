@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FacultyRoute from "./Account/FacultyRoute";
 import { useEffect, useState } from "react";
-import { addNewCourse, deleteCourse, updateCourse, enrollCourse, unenrollCourse } from "./Courses/reducer";
+import { addNewCourse, deleteCourse, updateCourse, enrollCourse, unenrollCourse, setCourses } from "./Courses/reducer";
 import * as userClient from "./Account/client";
 import * as coursesClient from "./Courses/client";
 import * as enrollmentsClient from "./Courses/enrollmentsClient";
@@ -14,7 +14,8 @@ export default function Dashboard({ courses }: { courses: any[] }) {
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments } = useSelector((state: any) => state.coursesReducer);
 
-    const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+    const [showEnrolled, setShowEnrolled] = useState(true);
+    const [allCourses, setAllCourses] = useState<any[]>([]);
     const [course, setCourse] = useState<any>({
         _id: "0",
         name: "New Course",
@@ -25,18 +26,15 @@ export default function Dashboard({ courses }: { courses: any[] }) {
         description: "New Description"
     });
 
-    const [showEnrolled, setShowEnrolled] = useState(true);
-
     const createCourse = async (course: any) => {
         const newCourse = await userClient.createCourse(course);
         dispatch(addNewCourse(newCourse));
-        // setCourses([...courses, newCourse]);
+        enrollInCourse(currentUser._id, newCourse._id);
     };
 
     const removeCourse = async (courseId: string) => {
         await coursesClient.deleteCourse(courseId);
         dispatch(deleteCourse(courseId));
-        // setCourses(courses.filter((course) => course._id !== courseId));
     };
 
     const saveCourse = async (course: any) => {
@@ -55,23 +53,34 @@ export default function Dashboard({ courses }: { courses: any[] }) {
     }
 
     const isEnrolled = (courseId: any) => {
-        return enrolledCourses.some((course: any) =>
-            course._id === courseId
+        return enrollments.some(
+            (e: any) => e.user === currentUser._id && e.course === courseId
         );
     };
+
+    const fetchAllCourses = async () => {
+        try {
+            const allCourses = await coursesClient.fetchAllCourses();
+            setAllCourses(allCourses);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        fetchAllCourses();
+    }, [currentUser, courses]);
 
     const fetchMyCourses = async () => {
         try {
             const enrolledCourses = await userClient.findMyCourses();
-            console.log("Enrolled courses:", enrolledCourses);
-            setEnrolledCourses(enrolledCourses);
+            dispatch(setCourses(enrolledCourses));
         } catch (error) {
             console.error(error);
         }
     };
     useEffect(() => {
         fetchMyCourses();
-    }, [currentUser, courses, enrollments]);
+    }, [currentUser, enrollments]);
 
     return (
         <div id="wd-dashboard" className="p-4">
@@ -97,7 +106,7 @@ export default function Dashboard({ courses }: { courses: any[] }) {
             </FacultyRoute>
 
             <h2 id="wd-dashboard-published">
-                Published Courses ({(showEnrolled ? enrolledCourses : courses).length})
+                Published Courses ({(showEnrolled ? courses : allCourses).length})
                 <Button className="float-end me-2" variant="primary"
                     onClick={() => setShowEnrolled(!showEnrolled)}>
                     Enrollments
@@ -107,7 +116,7 @@ export default function Dashboard({ courses }: { courses: any[] }) {
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
 
-                    {(showEnrolled ? enrolledCourses : courses)
+                    {(showEnrolled ? courses : allCourses)
                         .map((course: any) => (
                             <Col className="wd-dashboard-course" style={{ width: "300px" }}>
                                 <Card>

@@ -9,19 +9,18 @@ import EnrollmentRoute from "./Account/EnrollmentRoute";
 import Session from "./Account/Session";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourses, setEnrollments } from "./Courses/reducer";
-import * as coursesClient from "./Courses/client";
+import * as userClient from "./Account/client";
 import * as enrollmentsClient from "./Courses/enrollmentsClient";
 import { useEffect } from "react";
 
 export default function Kambaz() {
     const dispatch = useDispatch();
     const { courses } = useSelector((state: any) => state.coursesReducer);
-    const { enrollments } = useSelector((state: any) => state.coursesReducer);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
 
     const fetchCourses = async () => {
         try {
-            const courses = await coursesClient.fetchAllCourses();
+            const courses = await userClient.findMyCourses();
             dispatch(setCourses(courses));
         } catch (error) {
             console.error(error);
@@ -29,7 +28,7 @@ export default function Kambaz() {
     };
     useEffect(() => {
         fetchCourses();
-    }, [currentUser, enrollments]);
+    }, [currentUser]);
 
     const fetchEnrollments = async () => {
         try {
@@ -41,7 +40,7 @@ export default function Kambaz() {
     };
     useEffect(() => {
         fetchEnrollments();
-    }, [currentUser, courses]);
+    }, [currentUser]);
 
     return (
         <Session>
@@ -63,6 +62,5 @@ export default function Kambaz() {
                 </div>
             </div>
         </Session>
-
     );
 }
