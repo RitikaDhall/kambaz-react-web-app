@@ -14,11 +14,7 @@ export default function EnrollmentRoute({ children }: { children: any }) {
         );
     };
 
-    console.log("CURRENT USER:", currentUser);
-    console.log("enrollments:", enrollments);
-
     if (cid && isUserEnrolled(cid, currentUser._id)) {
-        console.log("IS ENROLLED:", isUserEnrolled(cid, currentUser._id));
         return children;
     } else {
         return <Navigate to="/Kambaz/Dashboard" />;
