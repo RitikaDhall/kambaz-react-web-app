@@ -18,7 +18,7 @@ const coursesSlice = createSlice({
     },
     addNewCourse: (state, { payload: course }) => {
       const newCourse: any = {
-        _id: uuidv4(),
+        _id: course.id,
         name: course.name,
         number: course.number,
         image: course.image,

@@ -14,6 +14,7 @@ export default function Courses() {
     const pathname = useLocation().pathname;
     const { cid } = useParams();
     // const { courses } = useSelector((state: any) => state.coursesReducer)
+    
     const [course, setCourse] = useState({
         _id: cid,
         name: "",
@@ -23,6 +24,7 @@ export default function Courses() {
         image: "",
         description: ""
     });
+    const [users, setUsers] = useState<any[]>([]);
 
     // useEffect fetch by ID
     const fetchCourseByID = async () => {
@@ -40,6 +42,20 @@ export default function Courses() {
     useEffect(() => {
         fetchCourseByID();
     }, [cid]);
+
+    const fetchUsersForCourse = async () => {
+        try {
+            if (cid) {
+                const users = await courseClient.findUsersForCourse(cid);
+                setUsers(users);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        fetchUsersForCourse();
+    }, [cid, users]);
 
     return (
         <div id="wd-courses">
@@ -62,7 +78,7 @@ export default function Courses() {
                         <Route path="Assignments/:aid" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Assignments/New" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Quizzes" element={<h2>Quizzes</h2>} />
-                        <Route path="People" element={<PeopleTable />} />
+                        <Route path="People" element={<PeopleTable users={users}/>} />
                     </Routes>
                 </div>
             </div>
