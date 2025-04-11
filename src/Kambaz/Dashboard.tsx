@@ -6,13 +6,11 @@ import { useEffect, useState } from "react";
 import { addNewCourse, deleteCourse, updateCourse, enrollCourse, unenrollCourse, setCourses } from "./Courses/reducer";
 import * as userClient from "./Account/client";
 import * as coursesClient from "./Courses/client";
-// import * as enrollmentsClient from "./Courses/enrollmentsClient";
 
 export default function Dashboard({ courses }: { courses: any[] }) {
     const dispatch = useDispatch();
 
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    // const { enrollments } = useSelector((state: any) => state.coursesReducer);
 
     const [showEnrolled, setShowEnrolled] = useState(true);
     const [shownCourses, setShownCourses] = useState<any[]>([]);
@@ -41,16 +39,6 @@ export default function Dashboard({ courses }: { courses: any[] }) {
         dispatch(updateCourse(course))
     };
 
-    // const enrollInCourse = async (userId: string, courseId: string) => {
-    //     await enrollmentsClient.enrollInCourse(userId, courseId);
-    //     dispatch(enrollCourse({ userId, courseId }));
-    // }
-
-    // const unenrollFromCourse = async (userId: string, courseId: string) => {
-    //     await enrollmentsClient.unenrollFromCourse(userId, courseId);
-    //     dispatch(unenrollCourse({ userId, courseId }));
-    // }
-
     const updateEnrollment = async (courseId: string, enrolled: boolean) => {
         const userId = currentUser._id;
         if (enrolled) {
@@ -72,12 +60,6 @@ export default function Dashboard({ courses }: { courses: any[] }) {
         dispatch(setCourses(shownCourses));
     };
 
-    // const isEnrolled = (courseId: any) => {
-    //     return enrollments.some(
-    //         (e: any) => e.user === currentUser._id && e.course === courseId
-    //     );
-    // };
-
     const fetchAllCourses = async () => {
         try {
             const allCourses = await coursesClient.fetchAllCourses();
@@ -95,9 +77,6 @@ export default function Dashboard({ courses }: { courses: any[] }) {
             console.error(error);
         }
     }
-    // useEffect(() => {
-    //     fetchAllCourses();
-    // }, [currentUser, courses]);
 
     const findCoursesForUser = async () => {
         try {
@@ -108,9 +87,6 @@ export default function Dashboard({ courses }: { courses: any[] }) {
             console.error(error);
         }
     };
-    // useEffect(() => {
-    //     fetchMyCourses();
-    // }, [currentUser, enrollments]);
 
     useEffect(() => {
         if (showEnrolled) {

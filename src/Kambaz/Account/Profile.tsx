@@ -27,8 +27,9 @@ export default function Profile() {
         dispatch(setCurrentUser(updatedProfile));
     };
 
-
-    useEffect(() => { fetchProfile(); }, []);
+    useEffect(() => {
+        fetchProfile();
+    }, []);
 
     return (
         <div id="wd-profile-screen">

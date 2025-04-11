@@ -17,9 +17,12 @@ export default function PeopleDetails() {
     const [editing, setEditing] = useState(false);
 
     const saveUser = async () => {
+        console.log("Clicked save user", name);
         const [firstName, lastName] = name.split(" ");
+        console.log("F:", firstName, " | L:", lastName);
         const updatedUser = { ...user, firstName, lastName, email, role };
         await client.updateUser(updatedUser);
+        console.log("reached after user update");
         setUser(updatedUser);
         setName("");
         setEmail("");
@@ -37,7 +40,7 @@ export default function PeopleDetails() {
         if (!uid) return;
         const user = await client.findUserById(uid);
         setUser(user);
-        setName(user.name);
+        setName(user.firstName + " " + user.lastName);
         setEmail(user.email);
         setRole(user.role);
     };
@@ -130,7 +133,10 @@ export default function PeopleDetails() {
             <b>Total Activity:</b>  <span className="wd-total-activity">{user.totalActivity}</span>
             <hr />
             <button onClick={() => deleteUser(uid)} className="btn btn-danger float-end wd-delete" > Delete </button>
-            <button onClick={() => navigate(-1)}
+            <button onClick={() => {
+                setEditing(false);
+                navigate(-1);
+            }}
                 className="btn btn-secondary float-start float-end me-2 wd-cancel" > Cancel </button>
         </div>
     );

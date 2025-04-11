@@ -19,7 +19,7 @@ export default function ModulesControls(
 
     return (
         <div id="wd-modules-controls" className="text-nowrap">
-            
+
             <FacultyRoute>
                 <Button variant="danger" size="lg" className="me-1 float-end" id="wd-add-module-btn" onClick={handleShow}>
                     <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
@@ -39,8 +39,6 @@ export default function ModulesControls(
                         <Dropdown.Item id="wd-publish-modules-only">
                             <GreenCheckmark /> Publish modules only
                         </Dropdown.Item>
-                        {/* Create two more items with IDs wd-unpublish-all-modules-and-items and wd-unpublish-modules-only with
-             labels Unpublish all modules and items and Unpublish modules only */}
                         <Dropdown.Item id="wd-unpublish-all-modules-and-items">
                             <MdDoNotDisturbAlt /> Unpublish all modules and items
                         </Dropdown.Item>
@@ -51,7 +49,6 @@ export default function ModulesControls(
                 </Dropdown>
             </FacultyRoute>
 
-            {/* Implement the View Progress and Collapse All buttons with IDs wd-view-progress and wd-collapse-all */}
             <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-view-progress">
                 View Progress
             </Button>
