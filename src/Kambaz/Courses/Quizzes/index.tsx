@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { quizzes } from "../../Database";
 import QuizControls from "./QuizControls";
@@ -13,7 +12,6 @@ import { HiOutlineRocketLaunch } from "react-icons/hi2";
 
 export default function Quizzes() {
     const { cid } = useParams();
-    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const [quizzesShown, setQuizzes] = useState<any>(quizzes);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const navigate = useNavigate();
@@ -49,6 +47,7 @@ export default function Quizzes() {
     }
 
     const handleDelete = (quizId: string) => {
+        console.log(quizId);
         setShowDeleteModal(true);
     }
 
