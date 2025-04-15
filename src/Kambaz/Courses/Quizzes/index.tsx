@@ -47,7 +47,7 @@ export default function Quizzes() {
     }
 
     const handleDelete = (quizId: string) => {
-        console.log(quizId);
+        console.log("Delete quiz:", quizId);
         setShowDeleteModal(true);
     }
 
