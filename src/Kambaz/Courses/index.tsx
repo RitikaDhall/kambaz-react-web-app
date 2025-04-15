@@ -9,12 +9,15 @@ import PeopleTable from "./People/Table";
 import FacultyRoute from "../Account/FacultyRoute";
 import * as courseClient from "./client";
 import { useEffect, useState } from "react";
+import Quizzes from "./Quizzes";
+import QuizEditor from "./Quizzes/Editor";
+import QuizDetails from "./Quizzes/Details";
 
 export default function Courses() {
     const pathname = useLocation().pathname;
     const { cid } = useParams();
     // const { courses } = useSelector((state: any) => state.coursesReducer)
-    
+
     const [course, setCourse] = useState({
         _id: cid,
         name: "",
@@ -77,8 +80,11 @@ export default function Courses() {
                         <Route path="Assignments" element={<Assignments />} />
                         <Route path="Assignments/:aid" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Assignments/New" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
-                        <Route path="Quizzes" element={<h2>Quizzes</h2>} />
-                        <Route path="People" element={<PeopleTable users={users}/>} />
+                        <Route path="Quizzes" element={<Quizzes />} />
+                        <Route path="Quizzes/:qid/Details" element={<FacultyRoute><QuizDetails /></FacultyRoute>} />
+                        <Route path="Quizzes/:qid" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
+                        <Route path="Quizzes/New" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
+                        <Route path="People" element={<PeopleTable users={users} />} />
                     </Routes>
                 </div>
             </div>

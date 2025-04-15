@@ -36,7 +36,7 @@ export default function Dashboard({ courses }: { courses: any[] }) {
 
     const saveCourse = async (course: any) => {
         await coursesClient.updateCourse(course);
-        dispatch(updateCourse(course))
+        dispatch(updateCourse(course));
     };
 
     const updateEnrollment = async (courseId: string, enrolled: boolean) => {
@@ -48,7 +48,8 @@ export default function Dashboard({ courses }: { courses: any[] }) {
             await userClient.unenrollFromCourse(currentUser._id, courseId);
             dispatch(unenrollCourse({ userId, courseId })); // i added
         }
-        setShownCourses(
+        console.log("Before:", courses);
+        dispatch(setCourses(
             courses.map((course) => {
                 if (course._id === courseId) {
                     return { ...course, enrolled: enrolled };
@@ -56,8 +57,8 @@ export default function Dashboard({ courses }: { courses: any[] }) {
                     return course;
                 }
             })
-        );
-        dispatch(setCourses(shownCourses));
+        ));
+        console.log("After:", courses);
     };
 
     const fetchAllCourses = async () => {
@@ -130,7 +131,7 @@ export default function Dashboard({ courses }: { courses: any[] }) {
             <div id="wd-dashboard-courses">
                 <Row xs={1} md={5} className="g-4">
 
-                    {shownCourses.map((course: any) => (
+                    {courses.map((course: any) => (
                         <Col className="wd-dashboard-course" style={{ width: "300px" }}>
                             <Card>
                                 <Link to={`/Kambaz/Courses/${course._id}/Home`} className="wd-dashboard-course-link text-decoration-none text-dark" >
@@ -167,7 +168,7 @@ export default function Dashboard({ courses }: { courses: any[] }) {
                                                 onClick={(event) => {
                                                     event.preventDefault();
                                                     updateEnrollment(course._id, !course.enrolled);
-                                                    course.enrolled = !course.enrolled;
+                                                    // course.enrolled = !course.enrolled;
                                                 }}>
                                                 {course.enrolled ? "Unenroll" : "Enroll"}
                                             </Button>

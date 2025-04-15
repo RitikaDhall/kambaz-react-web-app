@@ -60,7 +60,7 @@ export default function Assignments() {
                         <BsGripVertical className="me-2 fs-3" />
                         <Button
                             variant="link"
-                            className="p-0 text-black"
+                            className="p-0 text-black me-2"
                             onClick={() => setIsExpanded(!isExpanded)}
                         >
                             {isExpanded ? <IoMdArrowDropdown /> : <IoMdArrowDropright />}
@@ -130,8 +130,6 @@ export default function Assignments() {
                     }
                 </ListGroup.Item>
             </ListGroup>
-
-
 
         </div>
     );
