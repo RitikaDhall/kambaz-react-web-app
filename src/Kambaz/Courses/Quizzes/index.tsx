@@ -1,20 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
-import { quizzes } from "../../Database";
 import QuizControls from "./QuizControls";
 import { Button, Col, ListGroup, ListGroupItem, Modal, Row } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { IoMdArrowDropdown } from "react-icons/io";
 import FacultyRoute from "../../Account/FacultyRoute";
 import QuizControlButtons from "./QuizControlButtons";
-// import { FaTrash } from "react-icons/fa";
 import { HiOutlineRocketLaunch } from "react-icons/hi2";
+import { useDispatch, useSelector } from "react-redux";
+import { setQuizzes, updateQuiz, deleteQuiz } from "./reducer";
+import * as coursesClient from "../client";
 
 export default function Quizzes() {
     const { cid } = useParams();
-    const [quizzesShown, setQuizzes] = useState<any>(quizzes);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { quizzes } = useSelector((state: any) => state.quizzesReducer);
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const fetchQuizzes = async () => {
+        const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
+        dispatch(setQuizzes(quizzes));
+        console.log("QUIZZES:", quizzes);
+    };
+    useEffect(() => {
+        fetchQuizzes();
+    }, [cid]);
 
     const formatDate = (dateStr: string) => {
         const date = new Date(dateStr);
@@ -43,7 +56,7 @@ export default function Quizzes() {
     };
 
     const handleEdit = (quiz: any) => {
-        navigate(`/Kambaz/Courses/${quiz.course}/Quizzes/${quiz._id}`)
+        navigate(`/Kambaz/Courses/${quiz.course}/Quizzes/${quiz._id}/Edit`)
     }
 
     const handleDelete = (quizId: string) => {
@@ -51,26 +64,19 @@ export default function Quizzes() {
         setShowDeleteModal(true);
     }
 
-    const handlePublish = (quizId: string, publish: boolean) => {
+    const handlePublish = (quiz: any, publish: boolean) => {
 
         // if(publish) {
         //     // publish on backend
-        //     // reducer
         // } else {
         //     // unpublish on backend
-        //     // reducer
         // }
-        setQuizzes(
-            quizzesShown.map((quiz: any) => {
-                if (quiz._id === quizId) {
-                    return {...quiz, published: publish};
-                } else {
-                    return quiz;
-                }
-            })
-        )
-        // dispatch setquiz
+        dispatch(updateQuiz({ ...quiz, published: publish }))
     }
+
+    const removeQuiz = async (quizId: string) => {
+        dispatch(deleteQuiz(quizId));
+    };
 
     return (
         <div id="wd-quizzes">
@@ -91,8 +97,7 @@ export default function Quizzes() {
                         ASSIGNMENT QUIZZES
                     </div>
 
-                    {quizzesShown
-                        .filter((quiz: any) => quiz.course === cid)
+                    {quizzes
                         .map((quiz: any) => (
                             <ListGroup className="wd-lessons rounded-0" key={quiz._id}>
                                 <ListGroupItem className="wd-lesson p-3 ps-1">
@@ -107,7 +112,7 @@ export default function Quizzes() {
                                                 {quiz.title}
                                             </a>
                                             <br />
-                                            <b>{getAvailabilityStatus(quiz)}</b> | <b>Due</b> {formatDate(quiz.dueDate)} at 11:59pm | {quiz.points} pts | {quiz.questions.length} Questions
+                                            <b>{getAvailabilityStatus(quiz)}</b> | <b>Due</b> {formatDate(quiz.dueDate)} at 11:59pm | {quiz.points} pts | { } Questions
                                         </Col>
 
                                         <FacultyRoute>
@@ -132,7 +137,7 @@ export default function Quizzes() {
                                             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}> Cancel </Button>
                                             <Button variant="danger"
                                                 onClick={() => {
-                                                    // removeAssignment(quiz._id);
+                                                    removeQuiz(quiz._id);
                                                     setShowDeleteModal(false);
                                                 }} > Delete Quiz </Button>
                                         </Modal.Footer>

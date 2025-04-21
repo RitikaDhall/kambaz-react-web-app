@@ -81,8 +81,8 @@ export default function Courses() {
                         <Route path="Assignments/:aid" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Assignments/New" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Quizzes" element={<Quizzes />} />
-                        <Route path="Quizzes/:qid/Details" element={<FacultyRoute><QuizDetails /></FacultyRoute>} />
-                        <Route path="Quizzes/:qid" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
+                        <Route path="Quizzes/:qid/Details" element={<QuizDetails />} />
+                        <Route path="Quizzes/:qid/Edit" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
                         <Route path="Quizzes/New" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
                         <Route path="People" element={<PeopleTable users={users} />} />
                     </Routes>
