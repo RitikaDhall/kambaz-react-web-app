@@ -2,9 +2,9 @@ import { IoEllipsisVertical } from "react-icons/io5";
 import { FaCheckCircle, FaBan } from "react-icons/fa";
 import { Dropdown } from "react-bootstrap";
 
-export default function QuizControlButtons({quiz, handleDelete, handleEdit, handlePublish} : {
+export default function QuizControlButtons({quiz, setShowDeleteModal, handleEdit, handlePublish} : {
     quiz: any;
-    handleDelete: (quizId: string) => void;
+    setShowDeleteModal: (show: boolean) => void;
     handleEdit: (quizId: string) => void;
     handlePublish: (quiz: any, publish: boolean) => void;
 }) {
@@ -25,7 +25,7 @@ export default function QuizControlButtons({quiz, handleDelete, handleEdit, hand
 
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleEdit(quiz)}>Edit</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleDelete(quiz._id)}>Delete</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setShowDeleteModal(true)}>Delete</Dropdown.Item>
                     <Dropdown.Item onClick={() => handlePublish(quiz, !quiz.published)}>
                         {quiz.published? "Unpublish": "Publish"}
                     </Dropdown.Item>

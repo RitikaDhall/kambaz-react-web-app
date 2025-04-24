@@ -1,26 +1,28 @@
 import { Button, Col, Form, FormCheck, FormControl, FormGroup, FormLabel, FormSelect, Row } from "react-bootstrap";
-// import { useDispatch } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import * as coursesClient from "../../client";
+import * as quizClient from "../client";
+import { addQuiz, updateQuiz } from "../reducer";
 
 export default function DetailsEditor({ quiz, setQuiz }: {
     quiz: any;
     setQuiz: (quiz: any) => void;
 }) {
     const { cid } = useParams();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const location = useLocation();
     const navigate = useNavigate();
 
     const createQuizForCourse = async (quiz: any) => {
         if (!cid) return;
-        console.log(quiz);
-        // const assign = await coursesClient.createAssignmentForCourse(cid, quiz);
-        // dispatch(addAssignment(assign));
+        const newQuiz = await coursesClient.createQuizForCourse(cid, quiz);
+        dispatch(addQuiz(newQuiz));
     };
 
     const saveQuiz = async (quiz: any) => {
-        console.log(quiz);
-        // await assignmentsClient.updateAssignment(quiz);
-        // dispatch(updateAssignment(quiz));
+        await quizClient.updateQuiz(quiz);
+        dispatch(updateQuiz(quiz));
     };
 
     const handleSave = (quiz: any) => {
@@ -51,18 +53,6 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                         onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, description: e.target.value }))}
                     />
                 </FormGroup>
-
-                {/* <FormGroup as={Row} className="mb-2">
-                    <FormLabel column sm="4" htmlFor="wd-points" className="text-sm-end">
-                        Points
-                    </FormLabel>
-                    <Col sm="8">
-                        <FormControl id="wd-points"
-                            value={quiz?.points}
-                            onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, points: e.target.value }))}
-                        />
-                    </Col>
-                </FormGroup> */}
 
                 <FormGroup as={Row} className="mb-2">
                     <FormLabel column sm="4" htmlFor="wd-quiz-type" className="text-sm-end">
@@ -101,7 +91,7 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                 <Row className="mb-2">
                     <Col sm="4" />
                     <Col sm="8">
-                        <p className="mb-2"><strong>Options</strong></p>
+                        <p className="mb-2 mt-2"><strong>Options</strong></p>
                         <FormCheck className="mb-2" id="wd-shuffle-answers" name="wd-shuffle-answers" label="Shuffle Answers" value="SHUFFLE" />
                         <FormCheck className="mb-2" id="wd-time-limit" name="wd-time-limit" label="Time Limit" value="WEBSITE URL" />
                         <FormCheck className="mb-2" id="wd-multiple-attempts" name="wd-multiple-attempts" label="Allow Multiple Attempts" value="MEDIA RECORDINGS" />
@@ -128,26 +118,30 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                     </Col>
                 </FormGroup>
 
-                <FormGroup className="mb-2">
-                    <FormLabel column sm="4" htmlFor="wd-access-code">Access code</FormLabel>
-                    <FormControl as={Col} sm="8" id="wd-access-code"
-                        value={quiz?.accessCode}
-                        onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, accessCode: e.target.value }))}
-                    />
+                <FormGroup as={Row} className="mb-2">
+                    <FormLabel column sm="4" htmlFor="wd-access-code" className="text-sm-end">
+                        Access Code
+                    </FormLabel>
+                    <Col sm="8">
+                        <FormControl id="wd-access-code"
+                            value={quiz?.accessCode}
+                            onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, accessCode: e.target.value }))}
+                        />
+                    </Col>
                 </FormGroup>
 
                 <FormGroup as={Row} className="mb-2">
                     <FormLabel column sm="4" className="text-sm-end">
                         Assign
                     </FormLabel>
-                    <Col sm="8">
+                    <Col sm="8" className="mt-2">
                         {/* <FormLabel htmlFor="wd-assign-to" >Assign to</FormLabel>
                     <FormControl id="wd-assign-to"
                         value={quiz?.assignedTo}
                         onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, assignedTo: e.target.value }))}
                     /> */}
 
-                        <FormLabel htmlFor="wd-due-date" >Due</FormLabel>
+                        <FormLabel htmlFor="wd-due-date">Due</FormLabel>
                         <FormControl type="date" id="wd-due-date"
                             value={quiz?.dueDate}
                             onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, dueDate: e.target.value }))}

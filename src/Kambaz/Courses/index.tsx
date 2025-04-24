@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Quizzes from "./Quizzes";
 import QuizEditor from "./Quizzes/Editor";
 import QuizDetails from "./Quizzes/Details";
+import QuizPreview from "./Quizzes/Preview";
 
 export default function Courses() {
     const pathname = useLocation().pathname;
@@ -58,7 +59,7 @@ export default function Courses() {
     }
     useEffect(() => {
         fetchUsersForCourse();
-    }, [cid, users]);
+    }, [cid]);
 
     return (
         <div id="wd-courses">
@@ -83,6 +84,7 @@ export default function Courses() {
                         <Route path="Quizzes" element={<Quizzes />} />
                         <Route path="Quizzes/:qid/Details" element={<QuizDetails />} />
                         <Route path="Quizzes/:qid/Edit" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
+                        <Route path="Quizzes/:qid/Preview" element={<FacultyRoute><QuizPreview /></FacultyRoute>} />
                         <Route path="Quizzes/New" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
                         <Route path="People" element={<PeopleTable users={users} />} />
                     </Routes>

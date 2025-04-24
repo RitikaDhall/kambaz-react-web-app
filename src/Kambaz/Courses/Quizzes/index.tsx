@@ -10,6 +10,7 @@ import { HiOutlineRocketLaunch } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { setQuizzes, updateQuiz, deleteQuiz } from "./reducer";
 import * as coursesClient from "../client";
+import * as quizClient from "./client";
 
 export default function Quizzes() {
     const { cid } = useParams();
@@ -59,23 +60,15 @@ export default function Quizzes() {
         navigate(`/Kambaz/Courses/${quiz.course}/Quizzes/${quiz._id}/Edit`)
     }
 
-    const handleDelete = (quizId: string) => {
-        console.log("Delete quiz:", quizId);
-        setShowDeleteModal(true);
-    }
-
     const handlePublish = (quiz: any, publish: boolean) => {
-
-        // if(publish) {
-        //     // publish on backend
-        // } else {
-        //     // unpublish on backend
-        // }
-        dispatch(updateQuiz({ ...quiz, published: publish }))
+        quizClient.updateQuiz({ ...quiz, published: publish });
+        dispatch(updateQuiz({ ...quiz, published: publish }));
     }
 
-    const removeQuiz = async (quizId: string) => {
+    const handleDelete = async (quizId: string) => {
+        quizClient.deleteQuiz(quizId);
         dispatch(deleteQuiz(quizId));
+        setShowDeleteModal(false);
     };
 
     return (
@@ -120,7 +113,7 @@ export default function Quizzes() {
                                                 <QuizControlButtons
                                                     quiz={quiz}
                                                     handleEdit={handleEdit}
-                                                    handleDelete={handleDelete}
+                                                    setShowDeleteModal={setShowDeleteModal}
                                                     handlePublish={handlePublish} />
                                             </Col>
                                         </FacultyRoute>
@@ -137,8 +130,7 @@ export default function Quizzes() {
                                             <Button variant="secondary" onClick={() => setShowDeleteModal(false)}> Cancel </Button>
                                             <Button variant="danger"
                                                 onClick={() => {
-                                                    removeQuiz(quiz._id);
-                                                    setShowDeleteModal(false);
+                                                    handleDelete(quiz._id);
                                                 }} > Delete Quiz </Button>
                                         </Modal.Footer>
                                     </Modal>

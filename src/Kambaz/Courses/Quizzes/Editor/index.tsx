@@ -16,9 +16,9 @@ export default function QuizEditor() {
         description: "New description",
         course: cid,
         points: 100,
-        dueDate: new Date(),
-        availableDate: new Date(),
-        untilDate: new Date(),
+        // dueDate: new Date(),
+        // availableDate: new Date(),
+        // untilDate: new Date(),
     }
 
     const [quiz, setQuiz] = useState<any>({});
@@ -72,7 +72,16 @@ export default function QuizEditor() {
     // }, [qid]);
 
     return (
-        <Tabs
+        <div>
+
+            <div className="mb-2 me-4 d-flex justify-content-end">
+                <h5 className="me-4">Points {quiz.points}</h5>
+                <h5 className="me-2">{quiz.published ? ("Published") : ("Not published")}</h5>
+            </div>
+
+            <hr />
+
+            <Tabs
             defaultActiveKey="details"
             className="mb-3"
         >
@@ -83,5 +92,6 @@ export default function QuizEditor() {
                 <QuestionsEditor />
             </Tab>
         </Tabs>
+        </div>
     );
 }
