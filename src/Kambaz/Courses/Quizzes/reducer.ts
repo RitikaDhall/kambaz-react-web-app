@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   quizzes: [],
-  questions: []
+  questions: [],
+  attempt: {},
 };
 
 const quizzesSlice = createSlice({
@@ -76,9 +77,21 @@ const quizzesSlice = createSlice({
         (q: any) => q._id !== questionId
       );
     },
+    setAttempt: (state, { payload: attempt }) => {
+      state.attempt = attempt;
+    },
   },
 });
 
-export const { setQuizzes, addQuiz, deleteQuiz, updateQuiz, setQuestions, addQuestion, updateQuestion, deleteQuestion } =
-  quizzesSlice.actions;
+export const {
+  setQuizzes,
+  addQuiz,
+  deleteQuiz,
+  updateQuiz,
+  setQuestions,
+  addQuestion,
+  updateQuestion,
+  deleteQuestion,
+  setAttempt,
+} = quizzesSlice.actions;
 export default quizzesSlice.reducer;

@@ -17,6 +17,7 @@ export default function Quizzes() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { quizzes } = useSelector((state: any) => state.quizzesReducer);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,7 +25,6 @@ export default function Quizzes() {
     const fetchQuizzes = async () => {
         const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
         dispatch(setQuizzes(quizzes));
-        console.log("QUIZZES:", quizzes);
     };
     useEffect(() => {
         fetchQuizzes();
@@ -91,6 +91,7 @@ export default function Quizzes() {
                     </div>
 
                     {quizzes
+                        .filter((quiz: any) => currentUser.role !== "STUDENT" || quiz.published)
                         .map((quiz: any) => (
                             <ListGroup className="wd-lessons rounded-0" key={quiz._id}>
                                 <ListGroupItem className="wd-lesson p-3 ps-1">

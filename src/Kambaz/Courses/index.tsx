@@ -13,6 +13,9 @@ import Quizzes from "./Quizzes";
 import QuizEditor from "./Quizzes/Editor";
 import QuizDetails from "./Quizzes/Details";
 import QuizPreview from "./Quizzes/Preview";
+import StartQuiz from "./Quizzes/StartQuiz";
+import QuizResults from "./Quizzes/Results";
+import PreviewResults from "./Quizzes/PreviewResults";
 
 export default function Courses() {
     const pathname = useLocation().pathname;
@@ -82,9 +85,12 @@ export default function Courses() {
                         <Route path="Assignments/:aid" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Assignments/New" element={<FacultyRoute><AssignmentEditor /></FacultyRoute>} />
                         <Route path="Quizzes" element={<Quizzes />} />
+                        <Route path="Quizzes/:qid" element={<StartQuiz />} />
                         <Route path="Quizzes/:qid/Details" element={<QuizDetails />} />
+                        <Route path="Quizzes/:qid/Results" element={<QuizResults />} />
                         <Route path="Quizzes/:qid/Edit" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
                         <Route path="Quizzes/:qid/Preview" element={<FacultyRoute><QuizPreview /></FacultyRoute>} />
+                        <Route path="Quizzes/:qid/Preview/Results" element={<FacultyRoute><PreviewResults /></FacultyRoute>} />
                         <Route path="Quizzes/New" element={<FacultyRoute><QuizEditor /></FacultyRoute>} />
                         <Route path="People" element={<PeopleTable users={users} />} />
                     </Routes>

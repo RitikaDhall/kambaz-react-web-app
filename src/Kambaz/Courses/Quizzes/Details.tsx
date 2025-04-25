@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { FaPencilAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import * as attemptClient from "./attemptsClient";
 
 export default function QuizDetails() {
     const { cid, qid } = useParams();
@@ -11,11 +12,19 @@ export default function QuizDetails() {
     const [quiz, setQuiz] = useState<any>({});
     const { quizzes } = useSelector((state: any) => state.quizzesReducer);
 
+    const [noAttemptsTaken, setNoAttemptsTaken] = useState<number>(0);
+
+    const getAttemptsForUser = async (userId: string, quizId: string) => {
+        const attempts = await attemptClient.fetchAttemptsByUserAndQuiz(userId, quizId);
+        console.log("USER:", userId, "QUIZ:", quizId, "ATTEMPTS:", noAttemptsTaken, "HOW MANY:", quiz.howManyAttempts);
+        setNoAttemptsTaken(attempts.length);
+    }
+
     useEffect(() => {
         setQuiz(
             quizzes.find((quiz: any) => quiz._id === qid)
         );
-        console.log(quizzes, qid);
+        getAttemptsForUser(currentUser._id, qid as string);
     }, [qid]);
 
     const formatDate = (dateStr: string) => {
@@ -59,11 +68,11 @@ export default function QuizDetails() {
                         </tr>
                         <tr>
                             <th className="text-end pe-4">Multiple Attempts</th>
-                            <td>{quiz.multipleAttempts}</td>
+                            <td>{quiz.multipleAttempts ? "Yes" : "No"}</td>
                         </tr>
                         <tr>
                             <th className="text-end pe-4">How Many Attempts</th>
-                            <td></td>
+                            <td>{quiz.howManyAttempts}</td>
                         </tr>
                         <tr>
                             <th className="text-end pe-4">Show Correct Answers</th>
@@ -96,11 +105,13 @@ export default function QuizDetails() {
                         <th>Due Date</th>
                         <th>Available Date</th>
                         <th>Until Date</th>
+                        <th>Attempts Allowed</th>
                     </tr>
                     <tr style={{ borderBottom: '2px solid #dee2e6' }}>
                         <td>{formatDate(quiz.dueDate)} at 11:59pm</td>
                         <td>{formatDate(quiz.availableDate)} at 11:59pm</td>
                         <td>{formatDate(quiz.untilDate)} at 11:59pm</td>
+                        <td>{quiz.howManyAttempts}</td>
                     </tr>
                 </table>
 
@@ -121,9 +132,15 @@ export default function QuizDetails() {
                 )}
 
                 {currentUser && currentUser.role === "STUDENT" && (
-                    <Button className="me-2" variant="secondary" href={`#/Kambaz/Courses/${cid}/Quizzes/${qid}`} id={`wd-quiz-start-btn`}>
-                        Start Quiz
-                    </Button>
+                    noAttemptsTaken < quiz.howManyAttempts ? (
+                        <Button variant="secondary" href={`#/Kambaz/Courses/${cid}/Quizzes/${qid}`} id="wd-quiz-start-btn">
+                            Start Quiz
+                        </Button>
+                    ) : (
+                        <Button variant="secondary" href={`#/Kambaz/Courses/${cid}/Quizzes/${qid}/Results`} id="wd-quiz-results-btn">
+                            View Results
+                        </Button>
+                    )
                 )}
             </div>
         </div>

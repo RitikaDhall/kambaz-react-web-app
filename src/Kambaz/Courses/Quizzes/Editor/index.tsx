@@ -7,18 +7,27 @@ import QuestionsEditor from "./QuestionsEditor";
 
 export default function QuizEditor() {
     const location = useLocation();
-    // const navigate = useNavigate();
-    // const dispatch = useDispatch();
     const { cid, qid } = useParams();
 
     const newQuiz = {
         title: "New Quiz",
         description: "New description",
         course: cid,
-        points: 100,
-        // dueDate: new Date(),
-        // availableDate: new Date(),
-        // untilDate: new Date(),
+        points: 0,
+        assignmentGroup: "quizzes",
+        shuffleAnswers: false,
+        timeLimit: false,
+        multipleAttempts: false,
+        howManyAttempts: 1,
+        showCorrectAnswers: "no",
+        accessCode: "",
+        oneQuestionAtATime: false,
+        webcamRequired: false,
+        lockQuestionsAfterAnswering: false,
+        dueDate: "",
+        availableDate: "",
+        untilDate: "",
+        published: false,
     }
 
     const [quiz, setQuiz] = useState<any>({});
@@ -32,45 +41,6 @@ export default function QuizEditor() {
         );
     }, []);
 
-    // const [quiz, setQuiz] = useState({
-    //     _id: qid,
-    //     title: "",
-    //     description: "",
-    //     quizType: "",
-    //     points: 0,
-    //     assignmentGroup: "",
-    //     shuffleAnswers: "",
-    //     timeLimit: "",
-    //     multipleAttempts: "",
-    //     showCorrectAnswers: "",
-    //     accessCode: "",
-    //     oneQuestionAtATime: "",
-    //     webcamRequired: "",
-    //     lockQuestionsAfterAnswering: "",
-    //     dueDate: "",
-    //     availableDate: "",
-    //     untilDate: "",
-    //     published: false,
-    //     course: { type: "", ref: "CourseModel" },
-    // });
-
-    // // useEffect fetch by ID
-    // const fetchQuizByID = async () => {
-    //     try {
-    //         if (qid) {
-    //             const quiz = await quizClient.fetchQuizById(qid);
-    //             setQuiz(quiz);
-    //         } else {
-    //             console.error("Quiz ID is undefined.");
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
-    // useEffect(() => {
-    //     fetchQuizByID();
-    // }, [qid]);
-
     return (
         <div>
 
@@ -82,16 +52,16 @@ export default function QuizEditor() {
             <hr />
 
             <Tabs
-            defaultActiveKey="details"
-            className="mb-3"
-        >
-            <Tab eventKey="details" title="Details">
-                <DetailsEditor quiz={quiz} setQuiz={setQuiz}/>
-            </Tab>
-            <Tab eventKey="questions" title="Questions">
-                <QuestionsEditor />
-            </Tab>
-        </Tabs>
+                defaultActiveKey="details"
+                className="mb-3"
+            >
+                <Tab eventKey="details" title={<span className="text-danger">Details</span>}>
+                    <DetailsEditor quiz={quiz} setQuiz={setQuiz} />
+                </Tab>
+                <Tab eventKey="questions" title={<span className="text-danger">Questions</span>}>
+                    <QuestionsEditor quiz={quiz} setQuiz={setQuiz} />
+                </Tab>
+            </Tabs>
         </div>
     );
 }

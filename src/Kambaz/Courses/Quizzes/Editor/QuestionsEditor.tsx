@@ -2,14 +2,21 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as quizClient from "../client";
 import * as questionClient from "../questionClient";
-import { setQuestions, addQuestion, updateQuestion, deleteQuestion } from "../reducer";
+import { setQuestions, addQuestion, updateQuestion, deleteQuestion, updateQuiz } from "../reducer";
 import { Button, Col, Form, FormControl, ListGroup, Row } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { FaPencil, FaTrash, FaRegCircleCheck, FaCircleCheck } from "react-icons/fa6";
+import ReactQuill from "react-quill";
+import { useRef } from "react";
+import 'react-quill/dist/quill.snow.css';
 
-export default function QuestionsEditor() {
-    const dispatch = useDispatch();
+export default function QuestionsEditor({ quiz, setQuiz }: {
+    quiz: any;
+    setQuiz: (quiz: any) => void;
+}) {
     const { qid } = useParams();
+    const dispatch = useDispatch();
+    const quillRef = useRef(null);
 
     const { questions } = useSelector((state: any) => state.quizzesReducer);
 
@@ -75,6 +82,15 @@ export default function QuestionsEditor() {
         setPossibleAnswersList(possibleAnswersList.filter(answer => answer !== posAnswer))
     }
 
+    const handleQuestionChange = (ques: String) => {
+        setQuestion((prevState: any) => ({...prevState, question: ques}));
+    }
+
+    const updateQuizPoints = async (points: Number) => {
+        await quizClient.updateQuiz({ ...quiz, points: points });
+        dispatch(updateQuiz({ ...quiz, points: points }));
+    }
+
     const fetchQuestions = async () => {
         const questions = await quizClient.findQuestionsForQuiz(qid as string);
         dispatch(setQuestions(questions));
@@ -83,11 +99,22 @@ export default function QuestionsEditor() {
         fetchQuestions();
     }, [qid]);
 
+    useEffect(() => {
+        if (questions.length > 0) {
+            let totalPoints = 0;
+            questions.forEach((question: any) => {
+                totalPoints += question.points;
+            });
+            setQuiz({ ...quiz, points: totalPoints });
+            updateQuizPoints(totalPoints);
+        }
+    }, [questions]);
+
     return (
         <div>
             {questions.map((question: any) => (
-                <ListGroup className="rounded-0 ms-4 me-4 " key={question._id}>
-                    <ListGroup.Item as={Row} className="p-3 ps-1">
+                <ListGroup className="rounded-0 ms-4 me-4" key={question._id}>
+                    <ListGroup.Item as={Row} className="p-3 ps-1 border border-secondary-subtle">
                         {!question.editing && (
                             <div className="d-flex justify-content-between align-items-center">
                                 <Col>
@@ -131,7 +158,7 @@ export default function QuestionsEditor() {
                                     </Col>
                                     <Col>
                                         <FormControl className="w-25 d-inline-block"
-                                            onChange={(e) => setQuestion((prevState: any) => ({ ...prevState, points: e.target.value }))}
+                                            onChange={(e) => setQuestion((prevState: any) => ({ ...prevState, points: Number(e.target.value) }))}
                                             defaultValue={question.points}
                                         />  pts
                                     </Col>
@@ -140,10 +167,13 @@ export default function QuestionsEditor() {
                                 </div>
                                 <div className="mt-2">
                                     <h5>Question:</h5>
-                                    <FormControl as="textarea" rows={3}
-                                        defaultValue={question.question}
-                                        onChange={(e) => setQuestion((prevState: any) => ({ ...prevState, question: e.target.value }))}
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={questionChanges.question || ''}
+                                        onChange={handleQuestionChange}
+                                        ref={quillRef}
                                     />
+
                                     <h5 className="mt-2">Answers:</h5>
 
                                     {questionChanges.type === "MCQ" && (
@@ -157,7 +187,7 @@ export default function QuestionsEditor() {
                                                             {questionChanges.correctAnswer === posAns ? (
                                                                 <FaCircleCheck onClick={() => handleMarkCorrect(posAns)} className="text-success float-end me-2" />
                                                             ) : (
-                                                                <FaRegCircleCheck onClick={() => handleMarkCorrect(posAns)} className="float-end me-2" style={{ color: '#a3d9a5' }}/>
+                                                                <FaRegCircleCheck onClick={() => handleMarkCorrect(posAns)} className="float-end me-2" style={{ color: '#a3d9a5' }} />
                                                             )}
                                                             <FaTrash onClick={() => removePossibleAnswer(posAns)}
                                                                 className="float-end text-danger me-3"

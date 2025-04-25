@@ -3,11 +3,12 @@ import { Button, Card, FormControl, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import * as quizClient from "./client";
-import { setAttempt, setQuestions } from "./reducer";
+import * as attemptClient from "./attemptsClient";
+import { setQuestions, setAttempt } from "./reducer";
 import { FaRegCircleQuestion } from "react-icons/fa6";
-import DOMPurify from 'dompurify';
+import DOMPurify from "dompurify";
 
-export default function QuizPreview() {
+export default function StartQuiz() {
     const { qid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -78,6 +79,11 @@ export default function QuizPreview() {
         return calculatedScore;
     }
 
+    const createAttempt = async (attempt: any) => {
+        const newAttempt = await attemptClient.createAttempt(attempt);
+        return newAttempt;
+    }
+
     const handleSubmit = () => {
         const attemptAnswers = Object.entries(answers).map(([questionId, userAnswer]) => {
             const question = questions.find((q: any) => q._id === questionId);
@@ -93,10 +99,11 @@ export default function QuizPreview() {
             user: currentUser._id,
             quiz: quiz._id,
             points: totalScore,
-            submittedAt: new Date().toISOString(),
+            submittedAt: new Date,
             answers: attemptAnswers
         }
-        dispatch(setAttempt(newAttempt));
+        const attempt = createAttempt(newAttempt);
+        dispatch(setAttempt(attempt));
         navigate("Results");
     };
 

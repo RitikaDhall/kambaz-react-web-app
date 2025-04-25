@@ -4,6 +4,9 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import * as coursesClient from "../../client";
 import * as quizClient from "../client";
 import { addQuiz, updateQuiz } from "../reducer";
+import ReactQuill from "react-quill";
+import { useRef } from "react";
+import 'react-quill/dist/quill.snow.css';
 
 export default function DetailsEditor({ quiz, setQuiz }: {
     quiz: any;
@@ -13,6 +16,7 @@ export default function DetailsEditor({ quiz, setQuiz }: {
     const dispatch = useDispatch();
     const location = useLocation();
     const navigate = useNavigate();
+    const quillRef = useRef(null);
 
     const createQuizForCourse = async (quiz: any) => {
         if (!cid) return;
@@ -35,6 +39,17 @@ export default function DetailsEditor({ quiz, setQuiz }: {
         navigate(`/Kambaz/Courses/${cid}/Quizzes`);
     }
 
+    const handleDescriptionChange = (desc: String) => {
+        setQuiz((prevState: any) => ({ ...prevState, description: desc }));
+    }
+
+    const handleCheckboxChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setQuiz((prevQuiz: any) => ({
+            ...prevQuiz,
+            [field]: e.target.checked,
+        }));
+    };
+
     return (
         <Form id="wd-quiz-details-editor">
             <div>
@@ -46,12 +61,10 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                     />
                 </FormGroup>
 
-                <FormGroup className="mb-2">
+                <FormGroup className="mb-4">
                     <FormLabel htmlFor="wd-quiz-description">Quiz Instructions:</FormLabel>
-                    <FormControl as="textarea" id="wd-quiz-description" rows={5}
-                        defaultValue={quiz?.description}
-                        onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, description: e.target.value }))}
-                    />
+                    <ReactQuill theme="snow" id="wd-quiz-description" value={quiz?.description}
+                        onChange={handleDescriptionChange} ref={quillRef} />
                 </FormGroup>
 
                 <FormGroup as={Row} className="mb-2">
@@ -92,12 +105,62 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                     <Col sm="4" />
                     <Col sm="8">
                         <p className="mb-2 mt-2"><strong>Options</strong></p>
-                        <FormCheck className="mb-2" id="wd-shuffle-answers" name="wd-shuffle-answers" label="Shuffle Answers" value="SHUFFLE" />
-                        <FormCheck className="mb-2" id="wd-time-limit" name="wd-time-limit" label="Time Limit" value="WEBSITE URL" />
-                        <FormCheck className="mb-2" id="wd-multiple-attempts" name="wd-multiple-attempts" label="Allow Multiple Attempts" value="MEDIA RECORDINGS" />
-                        <FormCheck className="mb-2" id="wd-one-question" name="wd-one-question" label="One Question at a Time" value="SHUFFLE" />
-                        <FormCheck className="mb-2" id="wd-webcam-req" name="wd-webcam-req" label="Webcam Required" value="WEBSITE URL" />
-                        <FormCheck className="mb-2" id="wd-lock-questions" name="wd-lock-questions" label="Lock Questions After Answering" value="WEBSITE URL" />
+                        <FormCheck
+                            className="mb-2"
+                            id="wd-shuffle-answers"
+                            label="Shuffle Answers"
+                            checked={quiz.shuffleAnswers}
+                            onChange={handleCheckboxChange("shuffleAnswers")}
+                        />
+                        <FormCheck
+                            className="mb-2"
+                            id="wd-time-limit"
+                            label="Time Limit"
+                            checked={quiz.timeLimit}
+                            onChange={handleCheckboxChange("timeLimit")}
+                        />
+                        <FormCheck
+                            className="mb-2"
+                            id="wd-multiple-attempts"
+                            label="Allow Multiple Attempts"
+                            checked={quiz.multipleAttempts}
+                            onChange={handleCheckboxChange("multipleAttempts")}
+                        />
+                        {quiz.multipleAttempts && (
+                            <div className="d-flex align-items-center gap-2 mb-3">
+                                <FormLabel className="mb-0">
+                                    Attempts Allowed
+                                </FormLabel>
+                                <FormControl
+                                    value={quiz?.howManyAttempts}
+                                    onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, howManyAttempts: e.target.value }))}
+                                    className="w-25"
+                                    type="number"
+                                />
+                            </div>
+                        )
+                        }
+                        <FormCheck
+                            className="mb-2"
+                            id="wd-one-question"
+                            label="One Question at a Time"
+                            checked={quiz.oneQuestionAtATime}
+                            onChange={handleCheckboxChange("oneQuestionAtATime")}
+                        />
+                        <FormCheck
+                            className="mb-2"
+                            id="wd-webcam-req"
+                            label="Webcam Required"
+                            checked={quiz.webcamRequired}
+                            onChange={handleCheckboxChange("webcamRequired")}
+                        />
+                        <FormCheck
+                            className="mb-2"
+                            id="wd-lock-questions"
+                            label="Lock Questions After Answering"
+                            checked={quiz.lockQuestionsAfterAnswering}
+                            onChange={handleCheckboxChange("lockQuestionsAfterAnswering")}
+                        />
                     </Col>
                 </Row>
 
@@ -110,10 +173,9 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                             defaultValue={quiz?.showCorrectAnswers}
                             onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, showCorrectAnswers: e.target.value }))}
                         >
-                            <option value="GRADED_QUIZ">No</option>
-                            <option value="PRACTICE_QUIZ">Immediately after submit</option>
-                            <option value="GRADED_SURVEY">After grade released</option>
-                            <option value="UNGRADED_SURVEY">Ungraded Survey</option>
+                            <option value="no">No</option>
+                            <option value="immediately">Immediately after submit</option>
+                            <option value="grade_release">After grade released</option>
                         </FormSelect>
                     </Col>
                 </FormGroup>
@@ -135,11 +197,6 @@ export default function DetailsEditor({ quiz, setQuiz }: {
                         Assign
                     </FormLabel>
                     <Col sm="8" className="mt-2">
-                        {/* <FormLabel htmlFor="wd-assign-to" >Assign to</FormLabel>
-                    <FormControl id="wd-assign-to"
-                        value={quiz?.assignedTo}
-                        onChange={(e) => setQuiz((prevState: any) => ({ ...prevState, assignedTo: e.target.value }))}
-                    /> */}
 
                         <FormLabel htmlFor="wd-due-date">Due</FormLabel>
                         <FormControl type="date" id="wd-due-date"
