@@ -20,7 +20,6 @@ import PreviewResults from "./Quizzes/PreviewResults";
 export default function Courses() {
     const pathname = useLocation().pathname;
     const { cid } = useParams();
-    // const { courses } = useSelector((state: any) => state.coursesReducer)
 
     const [course, setCourse] = useState({
         _id: cid,

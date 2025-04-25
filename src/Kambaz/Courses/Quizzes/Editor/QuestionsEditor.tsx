@@ -31,7 +31,6 @@ export default function QuestionsEditor({ quiz, setQuiz }: {
             points: 0
         };
         const question = await quizClient.createQuestionForQuiz(qid, newQuestion);
-        console.log("QUESTION CREATED:", question);
         dispatch(addQuestion(question));
     };
 

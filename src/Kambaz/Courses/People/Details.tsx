@@ -17,12 +17,9 @@ export default function PeopleDetails() {
     const [editing, setEditing] = useState(false);
 
     const saveUser = async () => {
-        console.log("Clicked save user", name);
         const [firstName, lastName] = name.split(" ");
-        console.log("F:", firstName, " | L:", lastName);
         const updatedUser = { ...user, firstName, lastName, email, role };
         await client.updateUser(updatedUser);
-        console.log("reached after user update");
         setUser(updatedUser);
         setName("");
         setEmail("");

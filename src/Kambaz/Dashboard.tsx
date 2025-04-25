@@ -43,12 +43,12 @@ export default function Dashboard({ courses }: { courses: any[] }) {
         const userId = currentUser._id;
         if (enrolled) {
             await userClient.enrollIntoCourse(currentUser._id, courseId);
-            dispatch(enrollCourse({ userId, courseId })); // i added
+            dispatch(enrollCourse({ userId, courseId }));
         } else {
             await userClient.unenrollFromCourse(currentUser._id, courseId);
-            dispatch(unenrollCourse({ userId, courseId })); // i added
+            dispatch(unenrollCourse({ userId, courseId }));
         }
-        console.log("Before:", courses);
+        
         dispatch(setCourses(
             courses.map((course) => {
                 if (course._id === courseId) {
@@ -58,7 +58,6 @@ export default function Dashboard({ courses }: { courses: any[] }) {
                 }
             })
         ));
-        console.log("After:", courses);
     };
 
     const fetchAllCourses = async () => {
@@ -168,7 +167,6 @@ export default function Dashboard({ courses }: { courses: any[] }) {
                                                 onClick={(event) => {
                                                     event.preventDefault();
                                                     updateEnrollment(course._id, !course.enrolled);
-                                                    // course.enrolled = !course.enrolled;
                                                 }}>
                                                 {course.enrolled ? "Unenroll" : "Enroll"}
                                             </Button>

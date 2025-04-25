@@ -16,7 +16,6 @@ export default function QuizDetails() {
 
     const getAttemptsForUser = async (userId: string, quizId: string) => {
         const attempts = await attemptClient.fetchAttemptsByUserAndQuiz(userId, quizId);
-        console.log("USER:", userId, "QUIZ:", quizId, "ATTEMPTS:", noAttemptsTaken, "HOW MANY:", quiz.howManyAttempts);
         setNoAttemptsTaken(attempts.length);
     }
 
