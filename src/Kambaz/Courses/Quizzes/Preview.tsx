@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { Button, Card, FormControl, ListGroup } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import * as quizClient from "./client";
 import { setAttempt, setQuestions } from "./reducer";
 import { FaRegCircleQuestion } from "react-icons/fa6";
+import { IoInformationCircleOutline } from "react-icons/io5";
 import DOMPurify from 'dompurify';
 
 export default function QuizPreview() {
-    const { qid } = useParams();
+    const { cid, qid } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
@@ -117,6 +118,17 @@ export default function QuizPreview() {
             <div className="flex-grow-1">
                 <h4 className="mt-3 ms-3 mb-3">{quiz.title}</h4>
 
+                <ListGroup className="d-flex gap-2 border-0 ms-3 me-3 mb-3 mt-4 rounded-3"
+                    style={{
+                        backgroundColor: "#fff5f5",
+                        boxShadow: "0 0 8px rgba(255, 0, 0, 0.2)",
+                    }}>
+                    <ListGroup.Item className="d-flex align-items-center border-0 bg-transparent text-danger">
+                        <IoInformationCircleOutline className="me-2 fs-5" />
+                        This is a preview
+                    </ListGroup.Item>
+                </ListGroup>
+
                 {currentQuestion && (
                     <div className="d-flex justify-content-center">
                         <Card className="w-50 ms-3 me-3 mb-3 mt-4">
@@ -189,9 +201,10 @@ export default function QuizPreview() {
                         </Card>
                     </div>
                 )}
-                <br />
-                <div className="ms-3 me-3 d-flex justify-content-center">
+
+                <div className="ms-3 me-3 mt-4 d-flex justify-content-center">
                     <Button onClick={handleSubmit} className="me-2" variant="danger">Submit Quiz</Button>
+                    <Link to={`/Kambaz/Courses/${cid}/Quizzes/${qid}/Edit`} className="btn btn-secondary me-2">Edit Quiz</Link>
                 </div>
 
             </div>
