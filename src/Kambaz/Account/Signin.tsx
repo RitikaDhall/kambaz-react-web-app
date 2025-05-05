@@ -42,7 +42,7 @@ export default function Signin() {
                     setTimeout(() => setCopiedField(null), 3000);
                 }}
             >
-                {copiedField === label ? <FaCheck className="text-success" /> : <span className="text-danger"><FaWandMagicSparkles /> Use this</span>}
+                {copiedField === label ? <FaCheck className="text-success" /> : <span className="text-danger"><FaWandMagicSparkles className="mb-1" /> Use this</span>}
             </Button>
         </OverlayTrigger>
     );
