@@ -1,3 +1,4 @@
+
 const Loader = () => (
   <div style={{
     display: "flex", flexDirection: "column", justifyContent: "center",
@@ -5,14 +6,14 @@ const Loader = () => (
   }}>
     <div style={{
       border: "4px solid #f3f3f3",
-      borderTop: "4px solid #3498db",
+      borderTop: "4px solid #d92727",
       borderRadius: "50%",
       width: "50px",
       height: "50px",
       animation: "spin 1s linear infinite"
     }} />
     <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-    <p style={{ marginTop: "1rem" }}>Waking up the backend...</p>
+    <p style={{ marginTop: "1rem", color:"gray" }}>Waking up the backend...</p>
   </div>
 );
 
